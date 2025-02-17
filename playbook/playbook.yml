@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  connection: local
+
+  tasks:
+  - name: Create EC2 instances
+    amazon.aws.ec2_instance:
+      name: "clement-server"
+      key_name: "ans-win.pem"
+      instance_type: t2.micro
+      security_group: default
+      region: us-east-1       
+      #aws_access_key: "AKIAWCZC5ZCV5EQLQF5J"
+      #aws_secret_key: "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"
+      network:
+        assign_public_ip: true
+      image_id: "ami-053a45fff0a704a47"
+      count: 1
+  
