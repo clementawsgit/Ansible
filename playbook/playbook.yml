@@ -5,7 +5,7 @@
   - name: Create EC2 instances
     amazon.aws.ec2_instance:
       name: "clement-ansible"
-      key_name: "ansible01"
+      key_name: "ubuntu"
       instance_type: t2.micro
       security_group: My-security-group
       region: us-east-1
