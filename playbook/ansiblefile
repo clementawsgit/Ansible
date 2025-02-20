@@ -1,34 +1,36 @@
 pipeline {
-    agent any
-
-    environment {
-        ANSIBLE_CONFIG = "${WORKSPACE}/ansible.cfg"
-    }
-
-    stages {
-        stage('Clone repository') {
-            steps {
-                git 'https://github.com/clementawsgit/Ansible.git'
-            }
-        }
-        stage('Install dependencies') {
-            steps {
-                sh 'ansible-galaxy install -r requirements.yml'
-            }
-        }
-        stage('Run Ansible Playbook') {
-            steps {
-                sh 'ansible-playbook -i inventory.ini playbook.yml'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Deployment successful!'
-        }
-        failure {
-            echo 'Deployment failed!'
-        }
-    }
+   agent any
+   environment {
+       AWS_ACCESS_KEY_ID     = credentials('AKIAWCZC5ZCVWFTGYAOM')
+       AWS_SECRET_ACCESS_KEY = credentials('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')
+       ANSIBLE_HOST_KEY_CHECKING = 'False' // Disable host key checking for simplicity
+   }
+   stages {
+       stage('Checkout') {
+           steps {
+               // Checkout the code from your repository
+               git 'https://github.com/clementawsgit/Ansible.git'
+           }
+       }
+       stage('Ansible Playbook Execution') {
+           steps {
+               script {
+                   // Run the Ansible playbook to create EC2 instance
+                   ansiblePlaybook(
+                       playbook: 'playbook/playbook.yml'
+                       inventory: 'path/to/your/inventory.ini'
+                       extras: '--extra-vars "ansible_aws_access_key=$AWS_ACCESS_KEY_ID ansible_aws_secret_key=$AWS_SECRET_ACCESS_KEY"'
+                   )
+               }
+           }
+       }
+   }
+   post {
+       success {
+           echo 'EC2 Instance created successfully using Ansible!'
+       }
+       failure {
+           echo 'Failed to create EC2 Instance using Ansible.'
+       }
+   }
 }
