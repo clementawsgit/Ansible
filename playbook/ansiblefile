@@ -18,7 +18,7 @@ pipeline {
                    // Run the Ansible playbook to create EC2 instance
                    ansiblePlaybook(
                        playbook: 'playbook/playbook.yml'
-                       inventory: 'path/to/your/inventory.ini'
+                       inventory: 'playbook/inventory.ini'
                        extras: '--extra-vars "ansible_aws_access_key=$AWS_ACCESS_KEY_ID ansible_aws_secret_key=$AWS_SECRET_ACCESS_KEY"'
                    )
                }
